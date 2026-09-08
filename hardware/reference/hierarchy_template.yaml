@@ -183,7 +183,8 @@ modules:
       - {link: eth_100g, qty: 0}          # TODO(carc): cluster -> campus core; BeeGFS 2 PB is hosted on Hopper
 
   # Facility: "dedicated 1,200 square-foot research data center", 270 kVA UPS, three Liebert AC
-  # systems ("990 tons" in the docs — verify), "multiple 10 Gbps links" to campus, a dedicated
+  # systems totalling 90 tons of cooling (per T. Swetnam; the docs page says 990 in error),
+  # "multiple 10 Gbps links" to campus, a dedicated
   # 10 Gbps Science DMZ link, and 100 Gbps to ESnet and the Western Regional Network via the
   # Albuquerque Gigapop.
   - name: carc-facility

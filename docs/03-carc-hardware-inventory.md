@@ -90,8 +90,9 @@ since grown to 61 nodes / 2,176 cores.
 
 - "dedicated 1,200 square-foot research data center"
 - "270 kVA of UPS capacity"
-- "990 tons of dedicated cooling across three Liebert AC systems" — **verify**: 990 tons is
-  ≈ 3.5 MW of heat removal, inconsistent with 270 kVA; 99 tons (≈ 350 kW) is plausible.
+- **90 tons of dedicated cooling** across three Liebert AC systems (≈ 317 kW of heat
+  removal, consistent with the 270 kVA UPS) — per Tyson Swetnam, CARC Director, 2026-09-08.
+  The facilities page says "990 tons"; that is a documentation error to be fixed upstream.
 - Campus: "multiple 10 Gbps links, including a dedicated 10 Gbps connection to UNM's
   Science DMZ"; external: "100 Gbps connections to ESnet and the Western Regional Network
   through the Albuquerque Gigapop".

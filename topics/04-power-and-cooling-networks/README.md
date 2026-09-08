@@ -62,9 +62,10 @@ Quantities:
 
 ## Site specifics (2026-09)
 
-- CARC facility (docs/about/facilities): 1,200 sq ft, **270 kVA UPS**, three Liebert AC units
-  ("990 tons" as written — verify, likely 99), multiple 10 Gbps campus links + dedicated
-  10 Gbps Science DMZ, 100 Gbps to ESnet and the Western Regional Network. No PUE published.
+- CARC facility (docs/about/facilities + Tyson): 1,200 sq ft, **270 kVA UPS**, **90 tons**
+  (≈ 317 kW) of cooling across three Liebert AC units, multiple 10 Gbps campus links +
+  dedicated 10 Gbps Science DMZ, 100 Gbps to ESnet and the Western Regional Network. No PUE
+  published. Cooling capacity ≈ 1.2× UPS capacity is itself a Topic 04 datum.
 - Jetstream2's primary cloud sits in Indiana University's data center; no PUE in its docs.
 - A rack-density estimate for Easley follows from the node map once per-node power is
   sampled (H4.4): 4 H100 nodes and 9 L40S nodes are the hot rows.
