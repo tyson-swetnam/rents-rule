@@ -17,7 +17,7 @@ def _print_fit(label: str, fit) -> None:
 
 def cmd_demo(args) -> int:
     from . import hurst, topology
-    from .inventory import PKG_ROOT, census, census_report, load_hierarchy
+    from .inventory import PKG_ROOT, census, census_report, format_edges, load_hierarchy
 
     print("Rent exponents of synthetic topologies (links vs gates)")
     ft = topology.fat_tree(8)
@@ -48,15 +48,11 @@ def cmd_demo(args) -> int:
     df = census(h, group="example")
     with pd.option_context("display.width", 140, "display.float_format", "{:,.6g}".format):
         print(df[["level", "module", "gates", "lanes", "ports", "gbps"]].to_string(index=False))
-    rep = census_report(df)
+    rep = census_report(df, hierarchy=h)
     for t, fit in rep["fits"].items():
         _print_fit(f"all levels, T = {t}", fit)
-    print("  locality steps (T = gbps):")
-    for st in rep["steps"].get("gbps", []):
-        print(
-            f"    {st['from']:<22s} -> {st['to']:<22s} children={st['children']:>6.0f} "
-            f"local p={st['local_exponent']:>7.3f}  lambda={st['lambda']:.4f}"
-        )
+    print("  locality steps along parent <- child edges (T = gbps):")
+    print(format_edges(rep["edges"], "gbps"))
     return 0
 
 
@@ -115,7 +111,7 @@ def cmd_rates(args) -> int:
 
 
 def cmd_census(args) -> int:
-    from .inventory import census, census_report, load_hierarchy, load_link_table, load_transistor_table
+    from .inventory import census, census_report, format_edges, load_hierarchy, load_link_table, load_transistor_table
 
     h = load_hierarchy(args.yaml)
     tt = load_transistor_table(args.transistor_table)
@@ -127,17 +123,13 @@ def cmd_census(args) -> int:
     with pd.option_context("display.width", 160, "display.float_format", "{:,.6g}".format):
         print(df.to_string(index=False))
     for grp, sub in df.groupby("group"):
-        rep = census_report(sub, bootstrap=args.bootstrap)
+        rep = census_report(sub, bootstrap=args.bootstrap, hierarchy=h)
         print(f"\n[{grp}] Rent fits")
         for t, fit in rep["fits"].items():
             _print_fit(f"T = {t}", fit)
-        for t, steps in rep["steps"].items():
-            print(f"[{grp}] locality steps (T = {t})")
-            for st in steps:
-                print(
-                    f"    {st['from']:<26s} -> {st['to']:<26s} children={st['children']:>8.0f} "
-                    f"local p={st['local_exponent']:>7.3f}  lambda={st['lambda']:.4g}"
-                )
+        for t in ("lanes", "gbps"):
+            print(f"[{grp}] locality steps along parent <- child edges (T = {t})")
+            print(format_edges(rep["edges"], t))
     if args.out:
         df.to_csv(args.out, index=False)
         print(f"\nwrote {args.out}")

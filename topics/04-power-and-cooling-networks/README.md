@@ -60,6 +60,15 @@ Quantities:
 - Design documents: rack count, PDU tree, pipe and duct runs — enough to count hierarchy
   levels and lengths for the network-scaling question.
 
+## Site specifics (2026-09)
+
+- CARC facility (docs/about/facilities): 1,200 sq ft, **270 kVA UPS**, three Liebert AC units
+  ("990 tons" as written — verify, likely 99), multiple 10 Gbps campus links + dedicated
+  10 Gbps Science DMZ, 100 Gbps to ESnet and the Western Regional Network. No PUE published.
+- Jetstream2's primary cloud sits in Indiana University's data center; no PUE in its docs.
+- A rack-density estimate for Easley follows from the node map once per-node power is
+  sampled (H4.4): 4 H100 nodes and 9 L40S nodes are the hot rows.
+
 ## What must come from elsewhere
 
 - Hyperscaler PUE/WUE disclosures (Google, Meta, Microsoft annual reports), Uptime

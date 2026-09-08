@@ -98,3 +98,20 @@ size-tradeoff model. Compare with any hyperscaler / NAIRR data Melanie's group o
 | Model does not fit one node | this is a *result* (forces TP across nodes and `λ_w → 1`); record it |
 | Facility metering unavailable | node-level power still gives `P ∝ W^α`; PUE from public tables |
 | Old nodes with Python 3.6 | collectors are stdlib-only and 3.6-compatible; analysis runs elsewhere |
+
+## Jetstream2 addendum (second facility)
+
+Jetstream2's primary cloud is fully documented at the node and switch level (see
+[05-jetstream2-inventory.md](05-jetstream2-inventory.md)), so Phase 1 is a desk exercise
+there — already encoded as group `jetstream2` in the hierarchy YAML, with the leaf uplink
+count marked as inferred. What needs an allocation:
+
+| Phase | On Jetstream2 | Instrument |
+|---|---|---|
+| 2 (delivered bandwidth) | `iperf3` between m3.3xl instances (whole nodes) on different hosts; NCCL inside g5.4xl / g3.xl×4 | `benchmarks/inter_node/iperf3_pair.sh`, `intra_node/nccl_local.sh` (no Slurm: run directly) |
+| 3 (inference locality) | vLLM TP = 1, 2, 4 on g5.xl / g5.2xl / g5.4xl with `nvidia-smi nvlink` + NIC counters; compare with the public inference service's stated throughput | `benchmarks/inference/*`, `telemetry/collectors/*` |
+| 4 (traffic time series) | NIC counters of a long-lived instance; ask operations for leaf-uplink SNMP counters | `nic_counters.py`, `switch_counters.sh snmp` |
+| 5 (power) | not measurable from a VM; ask IU for facility PUE | — |
+
+Cross-site: perfSONAR at both ends (perfsonar.alliance.unm.edu and Jetstream2's Internet2
+link) gives the facility-to-facility boundary for Topic 01's outermost level.

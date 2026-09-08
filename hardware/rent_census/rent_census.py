@@ -21,6 +21,7 @@ from rentscale.fabric import fabric_summary, leaf_modules, parse_ibnetdiscover  
 from rentscale.inventory import (  # noqa: E402
     census,
     census_report,
+    format_edges,
     load_hierarchy,
     load_link_table,
     load_transistor_table,
@@ -53,14 +54,15 @@ def main() -> int:
         print("   " + ", ".join(todo["module"].tolist()))
 
     for grp, sub in df.groupby("group"):
-        rep = census_report(sub, bootstrap=a.bootstrap)
-        print(f"\n[{grp}] Rent fits across levels")
+        rep = census_report(sub, bootstrap=a.bootstrap, hierarchy=h)
+        print(f"\n[{grp}] Rent fits across levels (one number is rarely meaningful; read the edges)")
         for t, fit in rep["fits"].items():
             print(f"  T = {t:<6s} {fit}")
-        for t, steps in rep["steps"].items():
-            print(f"[{grp}] locality steps, T = {t}")
-            for st in steps:
-                print(f"    {st['from']:<26s} -> {st['to']:<26s} children={st['children']:>8.0f}  local p={st['local_exponent']:>7.3f}  lambda={st['lambda']:.4g}")
+        for t in ("lanes", "ports", "gbps"):
+            print(f"[{grp}] locality steps along parent <- child edges, T = {t}")
+            print(format_edges(rep["edges"], t))
+        if a.out:
+            rep["edges"].to_csv(Path(a.out).with_suffix(".edges.csv"), index=False)
 
     if a.fabric:
         G = parse_ibnetdiscover(Path(a.fabric).read_text(errors="replace"))

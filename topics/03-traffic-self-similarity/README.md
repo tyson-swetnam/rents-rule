@@ -55,6 +55,14 @@ Questions for the data center hierarchy:
 - Estimators: `rentscale.hurst` (R/S, aggregated variance, DFA, periodogram; `fgn()`
   generator for calibration). `rentscale hurst series.csv --column tx_bytes_per_s`.
 
+## Site specifics (2026-09)
+
+- CARC exposes a perfSONAR measurement point (perfsonar.alliance.unm.edu) on the campus/WAN
+  side and publishes XDMoD usage metrics; both are existing time series for the aggregate
+  (facility-level) end of the spatial-aggregation question.
+- Easley's fabric is NDR InfiniBand; Hopper's is HDR; Jetstream2's is 100 GbE Clos with
+  Cumulus switches (SNMP counters exist on the leaves and spines).
+
 ## Literature
 
 - Leland, Taqqu, Willinger & Wilson 1994, *On the self-similar nature of Ethernet traffic (extended version)*.

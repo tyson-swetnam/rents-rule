@@ -6,6 +6,8 @@
 # or an illustrative example; fits are done per group), gates from `parts` (looked up in
 # transistor_counts.csv by key or alias) and/or `children` (other modules, summed
 # recursively), and terminals from `external_links` (looked up in link_bandwidths.csv).
+# Locality steps are reported along parent -> child edges, so a node should list its GPU die
+# modules as `children` (CPUs, whose die-level links are internal, stay in `parts`).
 #
 # The `example` group is ILLUSTRATIVE: an 8-GPU A100 node (8 compute + 2 storage HDR
 # ports, 2 x 100GbE) in a non-blocking HDR fabric, with an 8:1 oversubscribed Ethernet
@@ -30,8 +32,9 @@ modules:
     group: example
     level: node
     parts:
-      - {part: nvidia-a100, qty: 8}
       - {part: amd-epyc-7742, qty: 2}
+    children:
+      - {module: example-a100-die, qty: 8}
     external_links:
       - {link: ib_hdr_4x, qty: 8}         # compute fabric, one HCA per GPU (rail-optimized)
       - {link: ib_hdr_4x, qty: 2}         # storage fabric
@@ -72,29 +75,240 @@ modules:
     external_links:
       - {link: eth_100g, qty: 4}          # campus / WAN uplinks: the Region-II step
 
-  # ---------------------------------------------------------------- carc group (fill me)
-  - name: carc-gpu-node-TODO
+  # ---------------------------------------------------------------- carc group
+  # Source: https://carc.unm.edu/docs (systems/overview, about/facilities, systems/resource-limits,
+  # running-jobs/slurm-intro; cluster state observed 2026-07-25, docs generated 2026-08-29).
+  # Everything still marked TODO(carc) is NOT in the docs and must come from the inventory scripts
+  # (hardware/inventory/*.sh). Parts with qty 0 are placeholders and contribute no gates.
+  #
+  # Easley (2025-class, Dell): 65 nodes, 4,160 cores (64/node), 23.3 TB RAM. The launch news
+  # (carc.unm.edu/news--events/News/easley-cluster.html) says the core network is "NVIDIA's 800 Gbps
+  # InfiniBand, with 200 Gbps connectivity to the nodes" -> per-node HCA = NDR200 (ib_ndr_2x),
+  # 768 TB raw all-flash parallel filesystem, "fivefold reduction in the number of racks and
+  # physical CPUs" vs Wheeler. Node map from sinfo: easley[001-048] general (CPU), easley[049-050]
+  # bigmem (~2 TB), easley[051-054] h100 (2x H100 each = 8), easley[055-063] L40S (4 each = 36;
+  # 055-057 in the l40s partition, 058-063 reserved/scavenger). CPU model not documented.
+  - name: carc-easley-h100-die
+    group: carc
+    level: die
+    parts: [{part: nvidia-h100, qty: 1}]
+    external_links:
+      - {link: pcie5_x16, qty: 1}         # TODO(carc): H100 PCIe (likely, 2/node) or SXM? NVLink bridge? -> nvidia-smi topo -m
+
+  - name: carc-easley-l40s-die
+    group: carc
+    level: die
+    parts: [{part: nvidia-l40s, qty: 1}]
+    external_links:
+      - {link: pcie4_x16, qty: 1}         # L40S has no NVLink: all GPU<->GPU traffic crosses PCIe
+
+  - name: carc-easley-cpu-node             # easley[001-048] general + easley[049-050] bigmem
     group: carc
     level: node
     parts:
-      - {part: "TODO(carc) e.g. nvidia-a100", qty: 0}
-      - {part: "TODO(carc) e.g. amd-epyc-7763", qty: 0}
+      - {part: "TODO(carc) Easley CPU model (lscpu)", qty: 0}   # 64 cores/node; not documented
     external_links:
-      - {link: ib_hdr_4x, qty: 0}         # TODO(carc) from ibstat / ib_sysfs.txt
-      - {link: eth_25g, qty: 0}           # TODO(carc) from ethtool_*.txt
+      - {link: ib_ndr_2x, qty: 1}         # "200 Gbps connectivity to the nodes" (launch news); confirm width/ports with ibstat
+      - {link: eth_25g, qty: 0}           # TODO(carc): management/campus NIC (ethtool)
 
-  - name: carc-leaf-TODO
+  - name: carc-easley-h100-node            # easley[051-054]
+    group: carc
+    level: node
+    parts:
+      - {part: "TODO(carc) Easley CPU model (lscpu)", qty: 0}
+    children:
+      - {module: carc-easley-h100-die, qty: 2}
+    external_links:
+      - {link: ib_ndr_2x, qty: 1}         # NDR200 per node (launch news); confirm with ibstat
+      - {link: eth_25g, qty: 0}           # TODO(carc): ethtool
+
+  - name: carc-easley-l40s-node            # easley[055-063]
+    group: carc
+    level: node
+    parts:
+      - {part: "TODO(carc) Easley CPU model (lscpu)", qty: 0}
+    children:
+      - {module: carc-easley-l40s-die, qty: 4}
+    external_links:
+      - {link: ib_ndr_2x, qty: 1}         # NDR200 per node (launch news); confirm with ibstat
+      - {link: eth_25g, qty: 0}           # TODO(carc): ethtool
+
+  - name: carc-easley-leaf-TODO
     group: carc
     level: leaf-group
     children:
-      - {module: carc-gpu-node-TODO, qty: 0}   # TODO(carc) hosts per leaf from ibnetdiscover / scontrol show topology
+      - {module: carc-easley-cpu-node, qty: 0}   # TODO(carc): hosts per leaf from ibnetdiscover / scontrol show topology
     external_links:
-      - {link: ib_hdr_4x, qty: 0}         # TODO(carc) leaf uplinks from iblinkinfo
+      - {link: ib_ndr_4x, qty: 0}         # TODO(carc): leaf uplinks from iblinkinfo (core is 800 Gbps-class NDR)
 
-  - name: carc-facility-TODO
+  - name: carc-easley-cluster
+    group: carc
+    level: pod
+    children:
+      - {module: carc-easley-cpu-node, qty: 50}
+      - {module: carc-easley-h100-node, qty: 4}
+      - {module: carc-easley-l40s-node, qty: 9}
+    external_links:
+      - {link: eth_100g, qty: 0}          # TODO(carc): cluster -> campus/storage core links (GPFS 720 TB is Easley-local)
+
+  # Hopper (2020-class): Dell PowerEdge R640/R740, Intel Xeon Gold 6226R / 6242 (Cascade Lake),
+  # 32 cores/node, 61 nodes, 2,176 cores, 37 A100 (+ V100 in condo/lab partitions), "NVIDIA HDR
+  # 400 Gbps InfiniBand network" (HDR ports are 200 Gb/s each). Launched as a condo cluster with
+  # 53 nodes / 1,760 Xeon Gold cores / 8.2 TB RAM (carc.unm.edu/news--events/News/carc-launches-hopper.html)
+  # and grew by purchase. GPU-node count and GPUs/node are not documented, so the 37 A100 are
+  # attached at the cluster level.
+  - name: carc-hopper-a100-die
+    group: carc
+    level: die
+    parts: [{part: nvidia-a100, qty: 1}]
+    external_links:
+      - {link: pcie4_x16, qty: 1}         # TODO(carc): A100 PCIe (R740) or SXM/NVLink? -> nvidia-smi topo -m
+
+  - name: carc-hopper-cpu-node
+    group: carc
+    level: node
+    parts:
+      - {part: "Xeon Gold 6226R", qty: 2}  # transistor count not published by Intel -> reported as unknown
+    external_links:
+      - {link: ib_hdr_4x, qty: 1}         # TODO(carc): 1 or 2 ports? ("HDR 400 Gbps") -> ibstat
+      - {link: eth_25g, qty: 0}           # TODO(carc): ethtool
+
+  - name: carc-hopper-cluster
+    group: carc
+    level: pod
+    children:
+      - {module: carc-hopper-cpu-node, qty: 61}
+      - {module: carc-hopper-a100-die, qty: 37}   # 37 A100 spread over TODO(carc) nodes; V100 count TODO(carc)
+    external_links:
+      - {link: eth_100g, qty: 0}          # TODO(carc): cluster -> campus core; BeeGFS 2 PB is hosted on Hopper
+
+  # Facility: "dedicated 1,200 square-foot research data center", 270 kVA UPS, three Liebert AC
+  # systems ("990 tons" in the docs — verify), "multiple 10 Gbps links" to campus, a dedicated
+  # 10 Gbps Science DMZ link, and 100 Gbps to ESnet and the Western Regional Network via the
+  # Albuquerque Gigapop.
+  - name: carc-facility
     group: carc
     level: facility
     children:
-      - {module: carc-leaf-TODO, qty: 0}
+      - {module: carc-easley-cluster, qty: 1}
+      - {module: carc-hopper-cluster, qty: 1}
     external_links:
-      - {link: eth_100g, qty: 0}          # TODO(carc) campus / Internet2 circuits (UNM IT)
+      - {link: eth_10g, qty: 2}           # "multiple 10 Gbps links" to campus — TODO(carc): exact count (UNM IT)
+      - {link: eth_10g, qty: 1}           # dedicated 10 Gbps Science DMZ
+      - {link: eth_100g, qty: 2}          # 100 Gbps ESnet + 100 Gbps Western Regional Network (Albuquerque Gigapop)
+
+  # ---------------------------------------------------------------- jetstream2 group
+  # Source: https://docs.jetstream-cloud.org (overview/config, overview/network, general/instance-flavors,
+  # faq/gpu, inference-service/overview). Primary cloud at Indiana University, Dell hardware; regional
+  # clouds (ASU, Cornell, U Hawai'i, TACC) are not itemized in the docs. Nodes: 384 compute (C6525),
+  # 32 large-memory (R7525), 90 A100 (XE8545), 24 H100 (XE9640), 8 L40S (R760XA); 14 PB Ceph.
+  # Fabric: two-tier spine-leaf Clos, no ISLs — 6x Mellanox SN4600 spines (64x 100 GbE) and
+  # 37x Mellanox SN2700 leaves (32x 100 GbE), Cumulus Linux/BGP. CPU and large-memory hosts have one
+  # 100 GbE link, GPU hosts two (Oct 2024). Uplinks: 2x 100 Gbps cloud -> data center, 100 Gbps to
+  # Internet2, 100 Gbps to the ACCESS research network.
+  - name: js2-a100-die
+    group: jetstream2
+    level: die
+    parts: [{part: nvidia-a100, qty: 1}]
+    external_links:
+      - {link: nvlink3_link, qty: 12}     # verify: HGX A100 4-GPU baseboard, 4 links to each of 3 peers
+      - {link: pcie4_x16, qty: 1}
+
+  - name: js2-h100-die
+    group: jetstream2
+    level: die
+    parts: [{part: nvidia-h100, qty: 1}]
+    external_links:
+      - {link: nvlink4_link, qty: 18}     # verify: HGX H100 4-GPU baseboard, 6 links to each of 3 peers
+      - {link: pcie5_x16, qty: 1}
+
+  - name: js2-l40s-die
+    group: jetstream2
+    level: die
+    parts: [{part: nvidia-l40s, qty: 1}]
+    external_links:
+      - {link: pcie4_x16, qty: 1}         # no NVLink
+
+  - name: js2-compute-node                 # Dell PowerEdge C6525: 2x AMD EPYC 7713 (128 cores), 512 GiB, 240 GB SSD
+    group: jetstream2
+    level: node
+    parts: [{part: "EPYC 7713", qty: 2}]
+    external_links:
+      - {link: eth_100g, qty: 1}
+
+  - name: js2-largemem-node                # Dell PowerEdge R7525: 2x EPYC 7713, 1024 GiB, 480 GB SSD
+    group: jetstream2
+    level: node
+    parts: [{part: "EPYC 7713", qty: 2}]
+    external_links:
+      - {link: eth_100g, qty: 1}
+
+  - name: js2-a100-node                    # Dell PowerEdge XE8545: 2x EPYC 7713, 512 GiB, 4x A100 SXM4 40 GB
+    group: jetstream2
+    level: node
+    parts:
+      - {part: "EPYC 7713", qty: 2}
+    children:
+      - {module: js2-a100-die, qty: 4}
+    external_links:
+      - {link: eth_100g, qty: 2}
+
+  - name: js2-h100-node                    # Dell PowerEdge XE9640: 2x Xeon Platinum 8468 (96 cores), ~1,007 GiB, 4x H100 SXM 80 GB
+    group: jetstream2
+    level: node
+    parts:
+      - {part: "Xeon Platinum 8468", qty: 2}   # transistor count not published -> unknown
+    children:
+      - {module: js2-h100-die, qty: 4}
+    external_links:
+      - {link: eth_100g, qty: 2}
+
+  - name: js2-l40s-node                    # Dell PowerEdge R760XA: 2x Xeon Gold 6438M (64 cores), ~503 GiB, 4x L40S 48 GB
+    group: jetstream2
+    level: node
+    parts:
+      - {part: "Xeon Gold 6438M", qty: 2}     # transistor count not published -> unknown
+    children:
+      - {module: js2-l40s-die, qty: 4}
+    external_links:
+      - {link: eth_100g, qty: 2}
+
+  # Leaf modules are INFERRED: an SN2700 has 32 ports; with 6 spines and one link per spine per
+  # leaf (37 leaves x 1 = 37 of 64 ports on each spine), a leaf has 6 uplinks and 26 downlinks —
+  # 4.3:1 oversubscription. The docs do not state the uplink count or which hosts share a leaf.
+  - name: js2-leaf-compute-inferred
+    group: jetstream2
+    level: leaf-group
+    children:
+      - {module: js2-compute-node, qty: 26}
+    external_links:
+      - {link: eth_100g, qty: 6}          # TODO(js2): confirm uplinks per leaf with Jetstream2 operations
+
+  - name: js2-leaf-gpu-inferred
+    group: jetstream2
+    level: leaf-group
+    children:
+      - {module: js2-a100-node, qty: 13}  # 13 dual-homed GPU hosts fill 26 downlinks
+    external_links:
+      - {link: eth_100g, qty: 6}          # TODO(js2)
+
+  - name: js2-primary-cloud
+    group: jetstream2
+    level: pod
+    children:
+      - {module: js2-compute-node, qty: 384}
+      - {module: js2-largemem-node, qty: 32}
+      - {module: js2-a100-node, qty: 90}
+      - {module: js2-h100-node, qty: 24}
+      - {module: js2-l40s-node, qty: 8}
+    external_links:
+      - {link: eth_100g, qty: 2}          # "2x100 Gbps uplinks from the cloud infrastructure to the data center infrastructure"
+
+  - name: js2-iu-datacenter
+    group: jetstream2
+    level: facility
+    children:
+      - {module: js2-primary-cloud, qty: 1}
+    external_links:
+      - {link: eth_100g, qty: 1}          # "100 Gbps connectivity from the site infrastructure to the Internet2 backbone"
+      - {link: eth_100g, qty: 1}          # "100 Gbps connectivity to the ACCESS research network via virtualized link"

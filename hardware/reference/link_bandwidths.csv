@@ -10,6 +10,7 @@ ib_qdr_4x,InfiniBand QDR 4x,4,10,32,copper/optical,8b/10b encoding gives 32 Gb/s
 ib_fdr_4x,InfiniBand FDR 4x,4,14.0625,54.5,copper/optical,64b/66b,verify
 ib_edr_4x,InfiniBand EDR 4x,4,25,100,copper/optical (QSFP28),,verify
 ib_hdr_4x,InfiniBand HDR 4x,4,50,200,copper/optical (QSFP56),,verify
+ib_ndr_2x,InfiniBand NDR 2x (NDR200),2,100,200,copper/optical (OSFP split),one OSFP cage carries two NDR200 or one NDR400 port,verify
 ib_ndr_4x,InfiniBand NDR 4x,4,100,400,copper/optical (OSFP),,verify
 ib_xdr_4x,InfiniBand XDR 4x,4,200,800,optical (OSFP),,verify
 eth_1g,1000BASE-T,4,0.25,1,copper (4 pairs),lanes = twisted pairs,verify

@@ -49,7 +49,7 @@ Each question has a working folder under [`topics/`](topics/README.md).
 | Path | What it holds |
 |---|---|
 | [`topics/`](topics/README.md) | One folder per research question: sharpened statement, hypotheses, what CARC can measure, literature, links to scripts. |
-| [`docs/`](docs/) | Origin email, research questions, measurement plan for CARC, background primers, references, glossary. |
+| [`docs/`](docs/) | Origin email, research questions, measurement plan for CARC (+ Jetstream2 addendum), CARC and Jetstream2 inventories from their documentation, background primers, references, glossary. |
 | [`hardware/`](hardware/README.md) | Static census: node/fabric inventory scripts, reference tables (transistor counts, link bandwidths), hierarchy template, Rent census tool. |
 | [`benchmarks/`](benchmarks/README.md) | Active experiments: intra-node (NVLink/PCIe), inter-node (InfiniBand/MPI), inference load, and Slurm job templates. |
 | [`telemetry/`](telemetry/README.md) | Passive collectors for IB/NIC/NVLink/PCIe/power counters, designed to run beside a job. |
@@ -101,6 +101,12 @@ byte and packet counters.
   Nothing has been measured yet. Reference tables carry a `confidence` column; values
   marked `verify` were entered from memory and must be checked against vendor sources
   before publication.
+- 2026-09-08 — CARC (Easley, Hopper, retired Wheeler/Gibbs/Xena/Taos, facility) and
+  Jetstream2 (primary cloud, Clos fabric, flavors, inference service) specifications
+  transcribed from their documentation sites into `docs/03`, `docs/05`,
+  `hardware/reference/hierarchy_template.yaml` (groups `carc`, `jetstream2`), and
+  `data/reference/`. Remaining `TODO(carc)` items (CPU models, per-HCA rates, GPUs per
+  Hopper node, fabric layout, PUE) need the inventory scripts or UNM facilities.
 
 ## People
 

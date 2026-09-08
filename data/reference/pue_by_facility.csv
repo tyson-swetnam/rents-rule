@@ -15,4 +15,5 @@ Uptime Institute global survey average,Uptime Institute,2024,industry-average,,1
 NREL ESIF HPC data center,NREL,2022,hpc-liquid-cooled,10,1.036,warm-water liquid cooling with waste-heat reuse,verify,NREL ESIF
 LBNL closet/room class estimate,LBNL (Shehabi et al. 2016),2014,small,0.05,2.0,assumed class PUE in the 2016 US report,verify,LBNL-1005775
 LBNL hyperscale class estimate,LBNL (Shehabi et al. 2016),2014,hyperscale,,1.2,assumed class PUE in the 2016 US report,verify,LBNL-1005775
-UNM CARC,UNM,TODO(carc),small-hpc,TODO(carc),TODO(carc),measure from PDU/UPS/BMS metering,unknown,
+UNM CARC research data center,UNM,2026,small-hpc,TODO(carc),TODO(carc),"1,200 sq ft; 270 kVA UPS; three Liebert AC units; docs state '990 tons of dedicated cooling' which is inconsistent with 270 kVA (likely 99 tons) — verify with UNM facilities; PUE never published; measure from PDU/UPS/BMS",unknown,https://carc.unm.edu/docs/about/facilities/
+Jetstream2 primary cloud (Indiana University data center),Indiana University,2026,academic-cloud,TODO(js2),TODO(js2),"538 documented nodes (384 compute + 32 large-memory + 90 A100 + 24 H100 + 8 L40S), 14 PB Ceph; PUE not published in docs — ask IU",unknown,https://docs.jetstream-cloud.org/overview/config/

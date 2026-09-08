@@ -87,6 +87,22 @@ levels** — which is exactly the "how much locality is designed in at each scal
 Then `python hardware/rent_census/rent_census.py hierarchy.yaml` fits `p` for each
 definition of `T` and prints `λ_ℓ` per boundary.
 
+## What the documentation already tells us (2026-09)
+
+- **CARC Easley**: 65 nodes, 64 cores each; 4 nodes × 2 H100, 9 nodes × 4 L40S (no NVLink on
+  L40S), "NDR 800 Gbps" InfiniBand; CPU model and per-HCA rate undocumented.
+- **CARC Hopper**: 61 Dell R640/R740 nodes, Xeon Gold 6226R/6242, 37 A100 + V100 condo nodes,
+  "HDR 400 Gbps" InfiniBand.
+- **Retired CARC generations** (Wheeler QDR 2010 → Gibbs QDR → Xena FDR + K40M → Taos FDR →
+  Hopper HDR + A100 → Easley NDR + H100/L40S) form a 15-year series for H1.5:
+  `data/reference/carc_generations.csv`.
+- **Jetstream2** (primary cloud): 538 Dell nodes on a two-tier Ethernet Clos of 6× SN4600 spines
+  and 37× SN2700 leaves, single 100 GbE per CPU host and dual per GPU host, 2× 100 Gbps to the
+  data center and 100 Gbps each to Internet2 and ACCESS — an inferred **4.3:1** leaf
+  oversubscription (`p ≈ 1 − ln 4.3 / ln 26 ≈ 0.55` if the tree were uniform) against CARC's
+  InfiniBand fat-trees. Details: [docs/03](../../docs/03-carc-hardware-inventory.md),
+  [docs/05](../../docs/05-jetstream2-inventory.md).
+
 ## What must come from elsewhere
 
 - Transistor counts for NICs (ConnectX) and most switch ASICs are not published; treat as

@@ -27,10 +27,13 @@ amd-mi100,AMD,Instinct MI100,gpu,2020,7,25.6,750,300,MI100,verify,AMD
 amd-mi250x,AMD,Instinct MI250X (2 GCD),gpu,2021,6,58.2,,560,MI250X|MI250,verify,AMD
 amd-mi300x,AMD,Instinct MI300X,gpu,2023,5,153.0,,750,MI300X,verify,AMD
 intel-xeon-e5-2670,Intel,Xeon E5-2670 (Sandy Bridge-EP 8c),cpu,2012,32,2.27,435,115,E5-2670|E5-2680|E5-2690|E5-2650,verify,Intel Sandy Bridge-EP die
-intel-xeon-e5-2680v4,Intel,Xeon E5-2680 v4 (Broadwell-EP),cpu,2016,14,7.2,456,120,E5-2680 v4|E5-2690 v4|E5-2650 v4|E5-2695 v4|E5-2697 v4,verify,Broadwell-EP HCC die 7.2 B; MCC die is smaller
-intel-xeon-6248,Intel,Xeon Gold 6248 (Cascade Lake-SP),cpu,2019,14,,,150,Xeon Gold 6248|Xeon Gold 6230|Xeon Gold 6240|Xeon Platinum 8268|Xeon Gold 5218,unknown,Intel does not publish
+intel-xeon-e5-2680v4,Intel,Xeon E5-2680 v4 (Broadwell-EP),cpu,2016,14,7.2,456,120,E5-2680 v4|E5-2690 v4|E5-2650 v4|E5-2695 v4|E5-2697 v4|E5-2698 v4,verify,Broadwell-EP HCC die 7.2 B; MCC die is smaller
+intel-xeon-6248,Intel,Xeon Gold 6248 (Cascade Lake-SP),cpu,2019,14,,,150,Xeon Gold 6248|Xeon Gold 6230|Xeon Gold 6240|Xeon Platinum 8268|Xeon Gold 5218|Gold 6226R|Gold 6242,unknown,Intel does not publish
 intel-xeon-8380,Intel,Xeon Platinum 8380 (Ice Lake-SP),cpu,2021,10,,,270,Xeon Platinum 8380|Xeon Gold 6338|Xeon Platinum 8358|Xeon Gold 6330|Xeon Gold 6348,unknown,Intel does not publish
 intel-xeon-8480,Intel,Xeon Platinum 8480+ (Sapphire Rapids),cpu,2023,7,,,350,8480+|8468|8460Y|6448Y|8470,unknown,Intel does not publish (4 tiles)
 intel-pvc,Intel,Data Center GPU Max 1550 (Ponte Vecchio),gpu,2023,7,100.0,,600,Max 1550|Ponte Vecchio,verify,Intel: over 100 B
 cerebras-wse2,Cerebras,Wafer Scale Engine 2,wafer,2021,7,2600.0,46225,,WSE-2,verify,Cerebras
 cerebras-wse3,Cerebras,Wafer Scale Engine 3,wafer,2024,5,4000.0,46225,,WSE-3,verify,Cerebras
+intel-xeon-x5550,Intel,Xeon X5550 (Nehalem-EP 4c),cpu,2009,45,0.731,263,95,X5550|X5570|E5540,verify,Intel Nehalem-EP die; CARC Wheeler (retired)
+intel-xeon-e5-2640v3,Intel,Xeon E5-2640 v3 (Haswell-EP 8c LCC),cpu,2014,22,2.6,354,90,E5-2640 v3|E5-2630 v3|E5-2620 v3,verify,Haswell-EP LCC die; CARC Xena GPU nodes (retired)
+intel-xeon-e7-4809v3,Intel,Xeon E7-4809 v3 (Haswell-EX 8c),cpu,2015,22,,,115,E7-4809 v3|E7-4809,unknown,Haswell-EX; die not published per SKU; CARC Xena bigmem (retired)

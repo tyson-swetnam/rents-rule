@@ -76,6 +76,16 @@ happens when a model no longer fits a node (TP across nodes), which flips `λ_w`
 Rack- and pod-level counters need switch access (`telemetry/collectors/switch_counters.sh`,
 `perfquery` or SNMP) — coordinate with CARC operations.
 
+## Site specifics (2026-09)
+
+- CARC Easley's **L40S nodes have no NVLink**: TP across 4 L40S runs over PCIe Gen4, so the
+  die-boundary bytes/token of H2.1 cross PCIe rather than NVLink — a built-in contrast with
+  the 2× H100 nodes (NVLink bridge `TODO(carc)`) and with Jetstream2's SXM A100/H100 nodes.
+- Jetstream2 runs a public **vLLM inference service** (Llama 4 Scout and gpt-oss-120b on 2× H100
+  each, muse-glimmer on 1× H100, stated 83–180 tokens/s): a documented TP = 2 deployment to
+  compare with our counters; Jetstream2 g5.2xl / g5.4xl flavors reproduce it under our control.
+- Easley GPU partitions (`h100`, `l40s`) are group-gated through ColdFront; 2-day walltime.
+
 ## What must come from elsewhere
 
 Production inference telemetry from hyperscalers (rack-level and pod-level bytes per token

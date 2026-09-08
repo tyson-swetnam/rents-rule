@@ -116,16 +116,55 @@ def test_census_example_group_fits():
     assert node.gates == pytest.approx(8 * 54.2e9 + 2 * 39.5e9)
     assert die.lanes == 12 * 4 + 16 and node.lanes == 10 * 4 + 2 * 4
     assert (df.unknown_parts == "").all() and (df.unknown_links == "").all()
-    rep = inv.census_report(df, bootstrap=0)
-    steps = {(s["from"], s["to"]): s for s in rep["steps"]["gbps"]}
-    # die -> node: the pin-limited step (fewer Gb/s leave the node than leave one GPU)
-    assert steps[("example-a100-die", "example-gpu-node")]["local_exponent"] < 0
-    # rack -> leaf-group -> pod: full bisection, lambda = 1 for the compute fabric (+ eth)
-    assert steps[("example-rack", "example-leaf-group")]["local_exponent"] == pytest.approx(1.0, abs=0.05)
-    assert steps[("example-leaf-group", "example-pod")]["lambda"] == pytest.approx(1.0, abs=0.05)
-    # pod -> facility: the WAN step
-    assert steps[("example-pod", "example-facility")]["lambda"] < 0.01
+    rep = inv.census_report(df, bootstrap=0, hierarchy=h)
+    e = rep["edges"]
+    g = e[e.terminal == "gbps"].set_index(["parent", "child"])
+    # node <- die: the pin-limited step (fewer Gb/s leave the node than leave one GPU)
+    assert g.loc[("example-gpu-node", "example-a100-die"), "local_exponent"] < 0
+    assert g.loc[("example-gpu-node", "example-a100-die"), "lambda_parent"] == pytest.approx(2200 / (8 * 2652), rel=1e-6)
+    # rack <- node: leaf switches sit outside the rack, so nothing is absorbed
+    assert g.loc[("example-rack", "example-gpu-node"), "lambda_parent"] == pytest.approx(1.0)
+    # leaf-group <- rack, pod <- leaf-group: non-blocking IB, 8:1 Ethernet -> lambda just below 1
+    assert g.loc[("example-leaf-group", "example-rack"), "local_exponent"] == pytest.approx(1.0, abs=0.05)
+    assert g.loc[("example-pod", "example-leaf-group"), "lambda_parent"] == pytest.approx(1.0, abs=0.05)
+    # facility <- pod: the WAN step
+    assert g.loc[("example-facility", "example-pod"), "lambda_parent"] < 0.01
     assert "gbps" in rep["fits"] and rep["fits"]["gbps"].n == 6
+    # the level-based fallback still works and the edge table covers all three terminal definitions
+    assert set(e.terminal) == {"lanes", "ports", "gbps"}
+    assert rep["steps"]["gbps"]
+    txt = inv.format_edges(e, "gbps")
+    assert "example-facility" in txt and "lambda=" in txt
+
+
+def test_census_carc_and_jetstream2_groups_resolve():
+    h = inv.load_hierarchy(inv.REF_DIR / "hierarchy_template.yaml")
+    carc = inv.census(h, group="carc")
+    js2 = inv.census(h, group="jetstream2")
+    # every link key in both groups exists in the link table
+    assert (carc.unknown_links == "").all() and (js2.unknown_links == "").all()
+    # Jetstream2 node gates: 2x EPYC 7713 (alias of the Milan row) + 4x A100
+    a100 = js2[js2.module == "js2-a100-node"].iloc[0]
+    assert a100.gates == pytest.approx(2 * 41.5e9 + 4 * 54.2e9)
+    assert a100.gbps == 200 and a100.ports == 2  # dual 100 GbE GPU hosts
+    comp = js2[js2.module == "js2-compute-node"].iloc[0]
+    assert comp.gbps == 100 and comp.gates == pytest.approx(2 * 41.5e9)
+    # Intel Sapphire Rapids parts have no published transistor count and are reported, not guessed
+    assert "Xeon Platinum 8468" in js2[js2.module == "js2-h100-node"].iloc[0].unknown_parts
+    cloud = js2[js2.module == "js2-primary-cloud"].iloc[0]
+    assert cloud.gbps == 200  # 2 x 100 Gbps to the data center
+    assert cloud.gates == pytest.approx(
+        (384 + 32) * 2 * 41.5e9 + 90 * (2 * 41.5e9 + 4 * 54.2e9) + 24 * 4 * 80e9 + 8 * 4 * 76.3e9
+    )
+    e = inv.hierarchy_steps(h, js2).set_index(["terminal", "parent", "child"])
+    assert e.loc[("gbps", "js2-a100-node", "js2-a100-die"), "lambda_parent"] == pytest.approx(200 / (4 * 2652), rel=1e-6)
+    assert e.loc[("gbps", "js2-leaf-compute-inferred", "js2-compute-node"), "lambda_parent"] == pytest.approx(6 / 26, rel=1e-6)
+    # CARC: Easley H100 node = 2 dies, unknown CPU (qty 0 placeholder contributes nothing)
+    h100 = carc[carc.module == "carc-easley-h100-node"].iloc[0]
+    assert h100.gates == pytest.approx(2 * 80e9) and h100.gbps == 200  # NDR200 per node (launch news)
+    assert carc[carc.module == "carc-hopper-cpu-node"].iloc[0].unknown_parts == "Xeon Gold 6226R"
+    fac = carc[carc.module == "carc-facility"].iloc[0]
+    assert fac.gbps == 2 * 10 + 10 + 2 * 100
 
 
 def test_census_reports_unknowns_and_cycles():

@@ -435,9 +435,59 @@ def census(hierarchy: dict, transistor_table=None, link_table=None, group: str |
     return df
 
 
-def census_report(df: pd.DataFrame, t_cols=("lanes", "ports", "gbps"), bootstrap: int = 200) -> dict:
-    """Rent fits for each terminal definition and locality steps along the levels
-    (one representative module per level, in level order)."""
+def hierarchy_steps(hierarchy: dict, df: pd.DataFrame, t_cols=("lanes", "ports", "gbps")) -> pd.DataFrame:
+    """Locality steps along the hierarchy's parent -> child edges.
+
+    For every module with ``children`` present in ``df`` and each terminal definition ``t``:
+
+    * ``lambda_parent`` = T(parent) / sum_c qty_c T(c) — the fraction of the children's
+      external capacity that leaves the parent (one value per parent, repeated per child row);
+    * ``child_share``   = qty_c T(c) / sum_c qty_c T(c) — this child's share of that capacity;
+    * ``local_exponent`` = ln(T(parent)/T(child)) / ln(G(parent)/G(child)) — the Rent exponent
+      across this single edge (NaN when either side has zero gates or terminals).
+    """
+    if df.empty:
+        return pd.DataFrame()
+    by = df.set_index("module")
+    rows = []
+    for m in hierarchy.get("modules", []):
+        name = m["name"]
+        children = [c for c in (m.get("children") or []) if c["module"] in by.index]
+        if name not in by.index or not children:
+            continue
+        parent = by.loc[name]
+        for t in t_cols:
+            total = sum(float(c.get("qty", 1)) * float(by.loc[c["module"]][t]) for c in children)
+            for c in children:
+                child = by.loc[c["module"]]
+                q = float(c.get("qty", 1))
+                Gp, Gc, Tp, Tc = float(parent["gates"]), float(child["gates"]), float(parent[t]), float(child[t])
+                if Gp > 0 and Gc > 0 and Tp > 0 and Tc > 0 and Gp != Gc:
+                    local_p = float(np.log(Tp / Tc) / np.log(Gp / Gc))
+                else:
+                    local_p = float("nan")
+                rows.append(
+                    {
+                        "terminal": t,
+                        "parent": name,
+                        "parent_level": parent["level"],
+                        "child": c["module"],
+                        "child_level": child["level"],
+                        "qty": q,
+                        "child_share": (q * Tc / total) if total > 0 else float("nan"),
+                        "lambda_parent": (Tp / total) if total > 0 else float("nan"),
+                        "local_exponent": local_p,
+                    }
+                )
+    return pd.DataFrame(rows)
+
+
+def census_report(
+    df: pd.DataFrame, t_cols=("lanes", "ports", "gbps"), bootstrap: int = 200, hierarchy: dict | None = None
+) -> dict:
+    """Rent fits for each terminal definition, level-based locality steps (one representative
+    module per level, in level order — a fallback for flat tables), and, when ``hierarchy``
+    is given, edge-based steps from :func:`hierarchy_steps` under ``"edges"``."""
     fits: dict[str, RentFit] = {}
     for t in t_cols:
         sub = df[(df["gates"] > 0) & (df[t] > 0)]
@@ -449,4 +499,19 @@ def census_report(df: pd.DataFrame, t_cols=("lanes", "ports", "gbps"), bootstrap
         s = ordered[ordered[t] > 0]
         if len(s) >= 2:
             steps[t] = locality_steps(s["gates"].to_numpy(), s[t].to_numpy(), names=s["module"].tolist())
-    return {"fits": fits, "steps": steps}
+    edges = hierarchy_steps(hierarchy, df, t_cols) if hierarchy is not None else pd.DataFrame()
+    return {"fits": fits, "steps": steps, "edges": edges}
+
+
+def format_edges(edges: pd.DataFrame, terminal: str = "gbps") -> str:
+    """Human-readable edge table for one terminal definition."""
+    if edges.empty:
+        return "  (no parent -> child edges)"
+    sub = edges[edges["terminal"] == terminal]
+    lines = []
+    for _, r in sub.iterrows():
+        lines.append(
+            f"    {r['parent']:<28s} <- {r['qty']:>5.0f} x {r['child']:<28s} "
+            f"share={r['child_share']:.2f}  lambda={r['lambda_parent']:.4g}  local p={r['local_exponent']:>7.3f}"
+        )
+    return "\n".join(lines)
