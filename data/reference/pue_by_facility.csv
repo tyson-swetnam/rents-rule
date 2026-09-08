@@ -1,0 +1,18 @@
+facility_or_survey,operator_or_source,year,scale_class,it_capacity_mw,pue,notes,confidence,source
+Google fleet (trailing twelve months),Google,2023,hyperscale,,1.10,fleet-wide TTM PUE as reported,verify,Google data center efficiency page
+Meta fleet,Meta,2023,hyperscale,,1.08,fleet-wide,verify,Meta sustainability report
+Microsoft fleet,Microsoft,2023,hyperscale,,1.18,fleet-wide,verify,Microsoft environmental sustainability report
+Uptime Institute global survey average,Uptime Institute,2007,industry-average,,2.50,survey average,verify,Uptime Institute Global Data Center Survey
+Uptime Institute global survey average,Uptime Institute,2011,industry-average,,1.98,survey average,verify,Uptime Institute Global Data Center Survey
+Uptime Institute global survey average,Uptime Institute,2013,industry-average,,1.65,survey average,verify,Uptime Institute Global Data Center Survey
+Uptime Institute global survey average,Uptime Institute,2018,industry-average,,1.58,survey average,verify,Uptime Institute Global Data Center Survey
+Uptime Institute global survey average,Uptime Institute,2019,industry-average,,1.67,survey average,verify,Uptime Institute Global Data Center Survey
+Uptime Institute global survey average,Uptime Institute,2020,industry-average,,1.59,survey average,verify,Uptime Institute Global Data Center Survey
+Uptime Institute global survey average,Uptime Institute,2021,industry-average,,1.57,survey average,verify,Uptime Institute Global Data Center Survey
+Uptime Institute global survey average,Uptime Institute,2022,industry-average,,1.55,survey average,verify,Uptime Institute Global Data Center Survey
+Uptime Institute global survey average,Uptime Institute,2023,industry-average,,1.58,survey average,verify,Uptime Institute Global Data Center Survey
+Uptime Institute global survey average,Uptime Institute,2024,industry-average,,1.56,survey average,verify,Uptime Institute Global Data Center Survey
+NREL ESIF HPC data center,NREL,2022,hpc-liquid-cooled,10,1.036,warm-water liquid cooling with waste-heat reuse,verify,NREL ESIF
+LBNL closet/room class estimate,LBNL (Shehabi et al. 2016),2014,small,0.05,2.0,assumed class PUE in the 2016 US report,verify,LBNL-1005775
+LBNL hyperscale class estimate,LBNL (Shehabi et al. 2016),2014,hyperscale,,1.2,assumed class PUE in the 2016 US report,verify,LBNL-1005775
+UNM CARC,UNM,TODO(carc),small-hpc,TODO(carc),TODO(carc),measure from PDU/UPS/BMS metering,unknown,

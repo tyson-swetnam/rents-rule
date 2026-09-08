@@ -1,0 +1,36 @@
+key,vendor,part,class,launch_year,process_nm,transistors_billion,die_area_mm2,tdp_w,aliases,confidence,source
+nvidia-k40,NVIDIA,Tesla K40 (GK110B),gpu,2013,28,7.1,561,235,Tesla K40|K40m|K40c,verify,NVIDIA Kepler GK110 whitepaper
+nvidia-k80,NVIDIA,Tesla K80 (2x GK210),gpu,2014,28,14.2,1122,300,Tesla K80|K80,verify,2 x GK210 at 7.1 B each
+nvidia-p100,NVIDIA,Tesla P100 (GP100),gpu,2016,16,15.3,610,300,Tesla P100|P100,verify,NVIDIA Pascal GP100 whitepaper
+nvidia-v100,NVIDIA,Tesla V100 (GV100),gpu,2017,12,21.1,815,300,Tesla V100|V100,verify,NVIDIA Volta whitepaper
+nvidia-t4,NVIDIA,Tesla T4 (TU104),gpu,2018,12,13.6,545,70,Tesla T4|T4,verify,NVIDIA Turing whitepaper
+nvidia-a100,NVIDIA,A100 (GA100),gpu,2020,7,54.2,826,400,A100,verify,NVIDIA Ampere GA100 whitepaper
+nvidia-a30,NVIDIA,A30 (GA100 die),gpu,2021,7,54.2,826,165,A30,verify,same die as A100
+nvidia-a40,NVIDIA,A40 / RTX A6000 (GA102),gpu,2020,8,28.3,628,300,A40|RTX A6000|A10,verify,NVIDIA GA102 whitepaper (A10 uses GA102 too)
+nvidia-h100,NVIDIA,H100 / H200 (GH100),gpu,2022,4,80.0,814,700,H100|H200,verify,NVIDIA Hopper whitepaper
+nvidia-l40s,NVIDIA,L40S / L40 (AD102),gpu,2023,4,76.3,609,350,L40S|L40|RTX 6000 Ada,verify,NVIDIA Ada whitepaper
+nvidia-l4,NVIDIA,L4 (AD104),gpu,2023,4,35.8,294,72,L4,verify,NVIDIA
+nvidia-b200,NVIDIA,B200 / B100 (two Blackwell dies),gpu,2024,4,208.0,,1000,B200|B100|GB200,verify,NVIDIA GTC 2024 keynote
+nvidia-nvswitch3,NVIDIA,NVSwitch gen 3 (HGX H100),switch,2022,4,25.1,294,,NVSwitch,verify,NVIDIA Hot Chips 34 (2022)
+nvidia-quantum2,NVIDIA,Quantum-2 NDR InfiniBand switch ASIC,switch,2021,7,57.0,,,QM9700|QM9790|Quantum-2,verify,NVIDIA press release Nov 2021
+nvidia-spectrum4,NVIDIA,Spectrum-4 Ethernet switch ASIC,switch,2022,4,100.0,,,Spectrum-4|SN5600,verify,NVIDIA GTC 2022
+nvidia-bluefield3,NVIDIA,BlueField-3 DPU,nic,2022,7,22.0,,,BlueField-3,verify,NVIDIA GTC 2021
+nvidia-connectx6,NVIDIA/Mellanox,ConnectX-6 HDR HCA,nic,2019,,,,,ConnectX-6|MT4123|MT4124|MT4125,unknown,transistor count not published
+nvidia-connectx7,NVIDIA,ConnectX-7 NDR HCA,nic,2022,,,,,ConnectX-7|MT4129,unknown,transistor count not published
+nvidia-quantum1,NVIDIA/Mellanox,Quantum HDR switch ASIC (QM8700/QM8790),switch,2018,16,,,,QM8700|QM8790|Quantum HDR,unknown,transistor count not published
+broadcom-tomahawk4,Broadcom,Tomahawk 4 (BCM56990) 25.6 Tb/s,switch,2019,7,31.0,,,Tomahawk 4|BCM56990,verify,Broadcom press release Dec 2019
+broadcom-tomahawk5,Broadcom,Tomahawk 5 (BCM78900) 51.2 Tb/s,switch,2022,5,,,,Tomahawk 5|BCM78900,unknown,not published
+amd-epyc-7742,AMD,EPYC 7742 (Rome: 8 x Zen 2 CCD + IOD),cpu,2019,7,39.5,,225,EPYC 7742|EPYC 7702|EPYC 7H12|EPYC 7662,verify,8 x 3.9 B (CCD) + 8.34 B (IOD); lower SKUs have fewer CCDs
+amd-epyc-7763,AMD,EPYC 7763 (Milan: 8 x Zen 3 CCD + IOD),cpu,2021,7,41.5,,280,EPYC 7763|EPYC 7713|EPYC 7543|EPYC 7443|EPYC 7343|EPYC 7V13,verify,8 x 4.15 B (CCD) + 8.34 B (IOD); lower SKUs have fewer CCDs
+amd-epyc-9654,AMD,EPYC 9654 (Genoa: 12 x Zen 4 CCD + IOD),cpu,2022,5,90.0,,360,EPYC 9654|EPYC 9554|EPYC 9454|EPYC 9354|EPYC 9334,verify,12 x 6.57 B (CCD) + ~11 B (IOD); lower SKUs have fewer CCDs
+amd-mi100,AMD,Instinct MI100,gpu,2020,7,25.6,750,300,MI100,verify,AMD
+amd-mi250x,AMD,Instinct MI250X (2 GCD),gpu,2021,6,58.2,,560,MI250X|MI250,verify,AMD
+amd-mi300x,AMD,Instinct MI300X,gpu,2023,5,153.0,,750,MI300X,verify,AMD
+intel-xeon-e5-2670,Intel,Xeon E5-2670 (Sandy Bridge-EP 8c),cpu,2012,32,2.27,435,115,E5-2670|E5-2680|E5-2690|E5-2650,verify,Intel Sandy Bridge-EP die
+intel-xeon-e5-2680v4,Intel,Xeon E5-2680 v4 (Broadwell-EP),cpu,2016,14,7.2,456,120,E5-2680 v4|E5-2690 v4|E5-2650 v4|E5-2695 v4|E5-2697 v4,verify,Broadwell-EP HCC die 7.2 B; MCC die is smaller
+intel-xeon-6248,Intel,Xeon Gold 6248 (Cascade Lake-SP),cpu,2019,14,,,150,Xeon Gold 6248|Xeon Gold 6230|Xeon Gold 6240|Xeon Platinum 8268|Xeon Gold 5218,unknown,Intel does not publish
+intel-xeon-8380,Intel,Xeon Platinum 8380 (Ice Lake-SP),cpu,2021,10,,,270,Xeon Platinum 8380|Xeon Gold 6338|Xeon Platinum 8358|Xeon Gold 6330|Xeon Gold 6348,unknown,Intel does not publish
+intel-xeon-8480,Intel,Xeon Platinum 8480+ (Sapphire Rapids),cpu,2023,7,,,350,8480+|8468|8460Y|6448Y|8470,unknown,Intel does not publish (4 tiles)
+intel-pvc,Intel,Data Center GPU Max 1550 (Ponte Vecchio),gpu,2023,7,100.0,,600,Max 1550|Ponte Vecchio,verify,Intel: over 100 B
+cerebras-wse2,Cerebras,Wafer Scale Engine 2,wafer,2021,7,2600.0,46225,,WSE-2,verify,Cerebras
+cerebras-wse3,Cerebras,Wafer Scale Engine 3,wafer,2024,5,4000.0,46225,,WSE-3,verify,Cerebras

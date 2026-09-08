@@ -1,0 +1,22 @@
+key,name,lanes_per_direction,gbps_per_lane,gbps_per_direction,medium,notes,confidence
+pcie3_x16,PCIe 3.0 x16,16,7.877,126,copper trace,8 GT/s with 128b/130b encoding,verify
+pcie4_x16,PCIe 4.0 x16,16,15.754,252,copper trace,16 GT/s 128b/130b,verify
+pcie5_x16,PCIe 5.0 x16,16,31.508,504,copper trace,32 GT/s 128b/130b,verify
+nvlink2_link,NVLink 2.0 link (V100),8,25,200,copper,25 GB/s per direction per link; 6 links per V100,verify
+nvlink3_link,NVLink 3.0 link (A100),4,50,200,copper,25 GB/s per direction per link; 12 links per A100,verify
+nvlink4_link,NVLink 4.0 link (H100),2,100,200,copper,25 GB/s per direction per link; 18 links per H100,verify
+nvlink5_link,NVLink 5.0 link (B200),2,200,400,copper,50 GB/s per direction per link; 18 links per B200,verify
+ib_qdr_4x,InfiniBand QDR 4x,4,10,32,copper/optical,8b/10b encoding gives 32 Gb/s data,verify
+ib_fdr_4x,InfiniBand FDR 4x,4,14.0625,54.5,copper/optical,64b/66b,verify
+ib_edr_4x,InfiniBand EDR 4x,4,25,100,copper/optical (QSFP28),,verify
+ib_hdr_4x,InfiniBand HDR 4x,4,50,200,copper/optical (QSFP56),,verify
+ib_ndr_4x,InfiniBand NDR 4x,4,100,400,copper/optical (OSFP),,verify
+ib_xdr_4x,InfiniBand XDR 4x,4,200,800,optical (OSFP),,verify
+eth_1g,1000BASE-T,4,0.25,1,copper (4 pairs),lanes = twisted pairs,verify
+eth_10g,10GBASE-SR/LR or SFP+ DAC,1,10,10,optical/copper,,verify
+eth_25g,25GBASE-SR / SFP28,1,25,25,optical/copper,,verify
+eth_40g,40GBASE-SR4 / QSFP+,4,10,40,optical/copper,,verify
+eth_100g,100GBASE-SR4 / QSFP28,4,25,100,optical/copper,SR2/DR variants use 2 or 1 lanes,verify
+eth_200g,200GBASE-SR4 / QSFP56,4,50,200,optical/copper,,verify
+eth_400g,400GBASE-DR4 / QSFP-DD,4,100,400,optical,SR8 uses 8 x 50,verify
+eth_800g,800GBASE / OSFP,8,100,800,optical,,verify

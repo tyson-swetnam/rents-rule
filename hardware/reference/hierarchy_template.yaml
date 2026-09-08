@@ -1,0 +1,100 @@
+# Hierarchy definition for the Rent census.
+#
+#   python hardware/rent_census/rent_census.py hardware/reference/hierarchy_template.yaml --group example
+#
+# Each module has a `level` (from `levels`, ordered small -> large), a `group` (a facility
+# or an illustrative example; fits are done per group), gates from `parts` (looked up in
+# transistor_counts.csv by key or alias) and/or `children` (other modules, summed
+# recursively), and terminals from `external_links` (looked up in link_bandwidths.csv).
+#
+# The `example` group is ILLUSTRATIVE: an 8-GPU A100 node (8 compute + 2 storage HDR
+# ports, 2 x 100GbE) in a non-blocking HDR fabric, with an 8:1 oversubscribed Ethernet
+# management network and 4 x 100GbE to the campus. Built only from public specifications
+# so the tool has something to run on; it is not a real facility. The `carc` group is the template to fill from the inventory scripts —
+# every TODO(carc) must be replaced by measured values.
+
+levels: [die, package, node, rack, leaf-group, pod, facility]
+
+modules:
+  # ---------------------------------------------------------------- example group
+  - name: example-a100-die
+    group: example
+    level: die
+    parts:
+      - {part: nvidia-a100, qty: 1}
+    external_links:
+      - {link: nvlink3_link, qty: 12}     # 12 NVLink 3 links per A100
+      - {link: pcie4_x16, qty: 1}
+
+  - name: example-gpu-node
+    group: example
+    level: node
+    parts:
+      - {part: nvidia-a100, qty: 8}
+      - {part: amd-epyc-7742, qty: 2}
+    external_links:
+      - {link: ib_hdr_4x, qty: 8}         # compute fabric, one HCA per GPU (rail-optimized)
+      - {link: ib_hdr_4x, qty: 2}         # storage fabric
+      - {link: eth_100g, qty: 2}          # management / campus
+
+  - name: example-rack
+    group: example
+    level: rack
+    children:
+      - {module: example-gpu-node, qty: 4}
+    external_links:                       # leaf switches sit outside the rack: every node port leaves the rack
+      - {link: ib_hdr_4x, qty: 40}
+      - {link: eth_100g, qty: 8}
+
+  - name: example-leaf-group
+    group: example
+    level: leaf-group
+    children:
+      - {module: example-rack, qty: 8}    # 32 nodes; 10 IB leaf switches (8 compute rails + 2 storage) + 1 Ethernet leaf
+    external_links:
+      - {link: ib_hdr_4x, qty: 320}       # non-blocking: 32 nodes x 10 ports = 320 uplinks
+      - {link: eth_100g, qty: 8}          # 64 x 100G downlinks, 8:1 oversubscribed
+
+  - name: example-pod
+    group: example
+    level: pod
+    children:
+      - {module: example-leaf-group, qty: 4}   # 128 nodes
+    external_links:
+      - {link: ib_hdr_4x, qty: 1280}      # non-blocking to the core
+      - {link: eth_100g, qty: 4}          # 32 x 100G downlinks, 8:1 oversubscribed
+
+  - name: example-facility
+    group: example
+    level: facility
+    children:
+      - {module: example-pod, qty: 2}     # 256 nodes
+    external_links:
+      - {link: eth_100g, qty: 4}          # campus / WAN uplinks: the Region-II step
+
+  # ---------------------------------------------------------------- carc group (fill me)
+  - name: carc-gpu-node-TODO
+    group: carc
+    level: node
+    parts:
+      - {part: "TODO(carc) e.g. nvidia-a100", qty: 0}
+      - {part: "TODO(carc) e.g. amd-epyc-7763", qty: 0}
+    external_links:
+      - {link: ib_hdr_4x, qty: 0}         # TODO(carc) from ibstat / ib_sysfs.txt
+      - {link: eth_25g, qty: 0}           # TODO(carc) from ethtool_*.txt
+
+  - name: carc-leaf-TODO
+    group: carc
+    level: leaf-group
+    children:
+      - {module: carc-gpu-node-TODO, qty: 0}   # TODO(carc) hosts per leaf from ibnetdiscover / scontrol show topology
+    external_links:
+      - {link: ib_hdr_4x, qty: 0}         # TODO(carc) leaf uplinks from iblinkinfo
+
+  - name: carc-facility-TODO
+    group: carc
+    level: facility
+    children:
+      - {module: carc-leaf-TODO, qty: 0}
+    external_links:
+      - {link: eth_100g, qty: 0}          # TODO(carc) campus / Internet2 circuits (UNM IT)

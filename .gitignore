@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Measurement outputs (raw telemetry and benchmark logs are large; keep them out of git)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+runs/
+*.log
+slurm-*.out
+ibdiagnet*/
+
+# Editors / OS
+.DS_Store
+.vscode/
+.idea/
+site.env
