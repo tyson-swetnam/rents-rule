@@ -103,6 +103,25 @@ definition of `T` and prints `λ_ℓ` per boundary.
   InfiniBand fat-trees. Details: [docs/03](../../docs/03-carc-hardware-inventory.md),
   [docs/05](../../docs/05-jetstream2-inventory.md).
 
+## What Moses et al. (2016) adds
+
+Rent's rule is the third dimension of their network model: `w_i = w_0 λ^{i/D_w}` with
+`p = 1/D_w`, next to `D_l` (lengths) and `D_r` (thickness/bandwidth). Their chip optimum is
+`D_l = D_r = D_w = 2`, i.e. `p = 1/2` on a 2-D layout; the network-energy sum converges only
+if `p ≤ 1 − 1/D_l`. Two consequences for the census:
+
+- **H1.6** For each level, compare `p_hw` with `1 − 1/D_l` of that level's geometry (`1/2` on the
+  hall floor, `2/3` inside a rack or package). Levels above the bound (non-blocking fabrics)
+  are where cable-metres and network energy grow faster than `N`.
+- **H1.7** Full bisection is the fabric analogue of area-preserving branching (`D_r = 2`);
+  oversubscription `r` is `D_r > 2`. The model predicts organisms *should* slow flow toward the
+  terminals (`D_r = 24/11`); the fabric analogue is a mildly tapered tree. Report each leaf's
+  down/up ratio (`fabric.leaf_modules`) as the "blood-slowing" parameter of the fabric.
+
+The locality step and the exponent are linked in closed form for a uniform hierarchy,
+`λ_ℓ = k^{p−1}` (`rentscale.rent.locality_step_from_p`), so a measured step converts to a
+per-level `p` directly. Primer: [docs/background/energy-time-minimization.md](../../docs/background/energy-time-minimization.md).
+
 ## What must come from elsewhere
 
 - Transistor counts for NICs (ConnectX) and most switch ASICs are not published; treat as

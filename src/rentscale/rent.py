@@ -172,3 +172,18 @@ def locality_steps(
             }
         )
     return out
+
+
+def locality_step_from_p(p: float, k: float) -> float:
+    """For a uniform hierarchy with ``k`` children per module, Rent's rule ``T = t G**p``
+    implies a locality step ``lambda = T(parent) / (k T(child)) = k**(p - 1)``."""
+    if k <= 1:
+        raise ValueError("k must exceed 1")
+    return float(k ** (p - 1.0))
+
+
+def p_from_locality_step(lam: float, k: float) -> float:
+    """Inverse of :func:`locality_step_from_p`: ``p = 1 + ln(lambda) / ln(k)``."""
+    if k <= 1 or lam <= 0:
+        raise ValueError("need k > 1 and lambda > 0")
+    return float(1.0 + np.log(lam) / np.log(k))

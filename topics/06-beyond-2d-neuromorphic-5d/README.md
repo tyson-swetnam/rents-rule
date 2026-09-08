@@ -47,6 +47,16 @@ what would moving heat and power in 3D buy in communication terms.
   exponents for neural network models and neuromorphic hardware that can be compared
   directly with Topic 01/02 numbers (`verify`).
 
+## What Moses et al. (2016) adds
+
+`D_l` is explicitly the dimension the nodes fill, and the locality bound `p ≤ 1 − 1/D_l`
+is stated as the convergence condition of the network-energy sum. A 3-D data center (racks,
+stacked packages, liquid cooling that makes volume usable — the "five-dimensional" argument)
+raises the bound from 1/2 to 2/3: the amount of communication per transistor that can leave
+a module without super-linear wiring grows with the dimension the cooling network can
+serve. **H6.4:** liquid-cooled, 3-D-packaged levels of the hierarchy (NVLink domains,
+NVL72-class racks) show `p_hw` between 1/2 and 2/3, air-cooled 2-D levels stay at or below 1/2.
+
 ## What CARC contributes
 
 Nothing to measure directly beyond Topics 01–04; this is where their results are combined:

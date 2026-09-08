@@ -21,7 +21,8 @@ The measurements target the clusters operated by UNM CARC. See `README.md`,
 - `hardware/` — static census scripts + reference tables + hierarchy YAML + census tool.
 - `benchmarks/` — active experiments and Slurm templates.
 - `telemetry/` — passive counter collectors (stdlib-only Python so they run on any node).
-- `src/rentscale/` — the analysis package; `tests/` — pytest on synthetic data.
+- `src/rentscale/` — the analysis package (incl. `energytime.py`, the Moses et al. 2016 model and its
+  data-center regime — keep its exponents consistent with the paper's Table 1); `tests/` — pytest on synthetic data.
 - `data/reference/` — curated public tables; `data/raw|processed/` — gitignored outputs.
 
 ## Rules that matter here

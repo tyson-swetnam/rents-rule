@@ -43,6 +43,12 @@ def cmd_demo(args) -> int:
             f"periodogram {s['periodogram']:.3f} (beta {s['beta']:.2f}, expect {hurst.beta_from_H(H):.2f})"
         )
 
+    print("\nEnergy-time minimization exponents of N (Moses et al. 2016 regimes and the data-center regime)")
+    from .energytime import summary_table
+
+    with pd.option_context("display.width", 160):
+        print(summary_table().to_string(index=False, float_format=lambda v: f"{v:6.3f}"))
+
     print("\nCensus of the illustrative 'example' hierarchy (public specs, not a real facility)")
     h = load_hierarchy(PKG_ROOT / "hardware" / "reference" / "hierarchy_template.yaml")
     df = census(h, group="example")

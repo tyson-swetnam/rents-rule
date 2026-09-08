@@ -44,6 +44,26 @@ of traffic leaving a module of linear size `D` must fall at least as fast as `1/
 inverses of the distances communicated". In 2D the critical exponent is `1/2`; in 3D it is
 `2/3`. Compare MST: a 3D space-filling supply network yields `3/4`; a 2D one `2/3`.
 
+### The same result from Melanie's model
+
+Moses et al. (2016) write network energy as the total wire length
+`E_net ∝ Σ_i l_i w_i n_i ∝ N^{1−1/D_l} Σ_i λ^{i(1/D_l + 1/D_w − 1)}`, which converges iff
+`D_w ≥ D_l/(D_l − 1)`, i.e. `p ≤ 1 − 1/D_l` — the same condition as above with `d = D_l`.
+Their chip regime has shrinking nodes and gives `E_sys × T_sys` per node `∝ N^{−1/2}`
+(increasing returns; power `∝ N^{1/2}`, measured 0.495). Holding node size fixed — the
+data-center regime — the same machinery gives `E_node ∝ N`, `E_net ∝ N` only below the
+locality bound, and a per-node energy–time product that is flat at best
+(`rentscale.energytime.datacenter_exponents`; table in
+[docs/background/energy-time-minimization.md](../../docs/background/energy-time-minimization.md)).
+So "compute had increasing returns" is the chip regime, "communication can be linear" is the
+locality bound, and "cooling and power face diminishing returns" is what happens to the
+`E_net` and `T_net` terms when `p_hw` exceeds the bound or the fabric is oversubscribed.
+
+**H5.4** The network fraction of facility power is the direct observable separating the
+regimes; **H5.5** across the chip → multi-core → data-center sequence the fitted power
+exponent moves from 0.5 toward 1, mirroring the protist → multicellular shift in DeLong et
+al. (2010) that the paper uses as its analogy.
+
 ### The table to fill in
 
 | Cost term | Quantity vs `N` | Expected `γ` | Source of the number |

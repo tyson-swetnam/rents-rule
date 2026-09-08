@@ -44,6 +44,16 @@ the instruments, and the analysis code to do that.
 
 Each question has a working folder under [`topics/`](topics/README.md).
 
+**Theoretical spine.** Moses, Bezerra, Edwards, Brown & Forrest (2016), *Energy and time
+determine scaling in biological and computer designs* (Phil. Trans. R. Soc. B 371:20150446,
+[PMC4958940](https://pmc.ncbi.nlm.nih.gov/articles/PMC4958940/)): a hierarchical-network
+model with three dimensions (`D_l` layout, `D_r` thickness, `D_w` communication with Rent's
+`p = 1/D_w`) that minimizes the energy–time product and predicts chip power `∝ N^{1/2}`
+and throughput `∝ N`. Its data-center regime (nodes of fixed size) gives linear returns as
+the ceiling and locality `p ≤ 1 − 1/D_l` as the condition for reaching it. Primer:
+[docs/background/energy-time-minimization.md](docs/background/energy-time-minimization.md);
+code: `rentscale.energytime`.
+
 ## Repository map
 
 | Path | What it holds |
@@ -53,7 +63,7 @@ Each question has a working folder under [`topics/`](topics/README.md).
 | [`hardware/`](hardware/README.md) | Static census: node/fabric inventory scripts, reference tables (transistor counts, link bandwidths), hierarchy template, Rent census tool. |
 | [`benchmarks/`](benchmarks/README.md) | Active experiments: intra-node (NVLink/PCIe), inter-node (InfiniBand/MPI), inference load, and Slurm job templates. |
 | [`telemetry/`](telemetry/README.md) | Passive collectors for IB/NIC/NVLink/PCIe/power counters, designed to run beside a job. |
-| [`src/rentscale/`](src/rentscale/) | Python package: Rent fits, topology generators (fat-tree, tapered tree, mesh), Hurst/spectral estimators, counter → rate conversion, benchmark output parsers, allometric/PUE models, census resolver, CLI. |
+| [`src/rentscale/`](src/rentscale/) | Python package: Rent fits, topology generators (fat-tree, tapered tree, mesh), Hurst/spectral estimators, counter → rate conversion, benchmark output parsers, allometric/PUE models, census resolver, the Moses et al. (2016) energy–time model with its data-center regime, CLI. |
 | [`tests/`](tests/) | pytest suite on synthetic data with known answers (fat-tree ⇒ p=1, d-mesh ⇒ p=1−1/d, fGn with known H, …). |
 | [`data/`](data/README.md) | `reference/` curated public tables (PUE by facility, …); `raw/` and `processed/` are gitignored measurement outputs. |
 | [`notebooks/`](notebooks/) | Analysis notebooks (empty until there is data). |
@@ -107,6 +117,9 @@ byte and packet counters.
   `hardware/reference/hierarchy_template.yaml` (groups `carc`, `jetstream2`), and
   `data/reference/`. Remaining `TODO(carc)` items (CPU models, per-HCA rates, GPUs per
   Hopper node, fabric layout, PUE) need the inventory scripts or UNM facilities.
+- 2026-09-08 — Moses et al. (2016) read in full and folded in: primer, `rentscale.energytime`
+  (chip, mammal, and data-center regimes; tested against Table 1), locality-step closed forms,
+  hypotheses H1.6–7, H2.6, H3.5, H4.5–6, H5.4–5, H6.4, and H-ET1–4.
 
 ## People
 

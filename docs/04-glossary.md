@@ -47,3 +47,13 @@
 - **PUE floor** — `1 + c`, the asymptote of `PUE(L) = 1 + (P_fixed + cL)/L`.
 - **`d_eff`** — `1/(1 − p)`, the dimension in which a system with Rent exponent `p` could be
   wired with bounded density.
+- **Energy–time product** — `E_sys × T_sys`, the quantity Moses et al. (2016) minimize; the
+  computer architect's energy–delay product. Its per-node exponent tells the returns regime.
+- **`D_l`, `D_r`, `D_w`** — the three scaling dimensions of that model: layout (lengths),
+  thickness/bandwidth (`2` = area preserving), and communication (`p = 1/D_w`).
+- **Area-preserving branching** — total cross-section (flow capacity) conserved across a
+  branching; `D_r = 2`; the fabric analogue is full bisection bandwidth.
+- **Steady state / pipelining** — supply equals demand and the network is always full; the
+  model's time assumption; the roofline ridge point in our measurements.
+- **Service volume / isochronic region** — the tissue served by one capillary; the chip area
+  reachable within one clock; the model's "node".

@@ -11,8 +11,17 @@ benchparse  nccl-tests, OSU, perftest output parsers
 scaling     returns to scale, PUE model, dimension bounds, size trade-off
 inventory   node inventory parsers and the hierarchy-YAML Rent census
 fabric      ibnetdiscover / Slurm topology parsers -> leaf-level Rent points
+energytime  Moses et al. (2016) energy-time minimization model and its data-center regime
 """
 
 __version__ = "0.1.0"
 
-from .rent import PowerLawFit, RentFit, fit_power_law, fit_rent, locality_steps  # noqa: F401
+from .rent import (  # noqa: F401
+    PowerLawFit,
+    RentFit,
+    fit_power_law,
+    fit_rent,
+    locality_step_from_p,
+    locality_steps,
+    p_from_locality_step,
+)

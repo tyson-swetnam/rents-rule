@@ -63,6 +63,15 @@ Questions for the data center hierarchy:
 - Easley's fabric is NDR InfiniBand; Hopper's is HDR; Jetstream2's is 100 GbE Clos with
   Cumulus switches (SNMP counters exist on the leaves and spines).
 
+## What Moses et al. (2016) adds
+
+Their model is a steady-state, pipelined one: resources arrive at the rate they are
+processed and never queue. Long-range-dependent traffic is the measured departure from that
+assumption. **H3.5:** the excess of `H` over 0.5 at the binding level predicts the queueing
+(latency) penalty relative to the model's `T_net`; a serving stack that flattens arrivals
+(continuous batching, admission control) should move `H` toward 0.5 and `T_net` toward the
+model value.
+
 ## Literature
 
 - Leland, Taqqu, Willinger & Wilson 1994, *On the self-similar nature of Ethernet traffic (extended version)*.

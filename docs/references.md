@@ -41,7 +41,14 @@ memory and need their details checked before citation.
 - West, G. B., Brown, J. H. & Enquist, B. J. (1997). A general model for the origin of allometric scaling laws in biology. *Science* 276, 122–126.
 - Banavar, J. R., Maritan, A. & Rinaldo, A. (1999). Size and form in efficient transportation networks. *Nature* 399, 130–132.
 - Banavar, J. R. et al. (2010). A general basis for quarter-power scaling in animals. *PNAS* 107(36), 15816–15820.
-- Moses, M. E., Bezerra, G., Edwards, B., Brown, J. & Forrest, S. (2016). Energy and time determine scaling in biological and computer designs. *Phil. Trans. R. Soc. B* 371, 20150446.
+- Moses, M. E., Bezerra, G., Edwards, B., Brown, J. & Forrest, S. (2016). Energy and time determine scaling in biological and computer designs. *Phil. Trans. R. Soc. B* 371, 20150446. PMC4958940, PMID 27431524. **Primer: [background/energy-time-minimization.md](background/energy-time-minimization.md).**
+- Moses, M. E., Forrest, S., Davis, A. L., Lodder, M. A. & Brown, J. H. (2008). Scaling theory for information networks. *J. R. Soc. Interface* 5, 1469–1480.
+- Bezerra, G. B., Forrest, S., Forrest, M., Davis, A. & Zarkesh-Ha, P. (2010). Modeling NoC traffic locality and energy consumption with Rent's communication probability distribution. *SLIP 2010*, 3–8.
+- Zarkesh-Ha, P., Bezerra, G. B., Forrest, S. & Moses, M. (2010). Hybrid network on chip (HNOC): local buses with a global mesh architecture. *SLIP 2010*, 9–14.
+- DeLong, J. P., Okie, J. G., Moses, M. E., Sibly, R. M. & Brown, J. H. (2010). Shifts in metabolic scaling, production, and efficiency across major evolutionary transitions of life. *PNAS* 107(29), 12941–12945.
+- Kolokotrones, T., Savage, V., Deeds, E. J. & Fontana, W. (2010). Curvature in metabolic scaling. *Nature* 464, 753–756.
+- Ozaktas, H. M. (2004). Information flow and interconnections in computing: extensions and applications of Rent's rule. *J. Parallel Distrib. Comput.* 64, 1360–1370.
+- Koomey, J., Berard, S., Sanchez, M. & Wong, H. (2011). Implications of historical trends in the electrical efficiency of computing. *IEEE Ann. Hist. Comput.* 33(3), 46–54.
 - Dennard, R. H. et al. (1974). Design of ion-implanted MOSFET's with very small physical dimensions. *IEEE J. Solid-State Circuits* 9(5), 256–268.
 - Esmaeilzadeh, H. et al. (2011). Dark silicon and the end of multicore scaling. *ISCA 2011*.
 

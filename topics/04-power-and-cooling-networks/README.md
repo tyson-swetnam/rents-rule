@@ -70,6 +70,17 @@ Quantities:
 - A rack-density estimate for Easley follows from the node map once per-node power is
   sampled (H4.4): 4 H100 nodes and 9 L40S nodes are the hot rows.
 
+## What Moses et al. (2016) adds
+
+Their chip result, power `∝ N^{1/2}` over six orders of magnitude, is the increasing-returns
+regime; it depends on transistors shrinking (`l_0 ∝ N^{−1/2}`). Data centers add nodes of
+fixed size, so the same sums give power `∝ N` at best, with the network term
+(`E_net`: switches, NICs, optics and the cooling they need) growing faster than `N` wherever
+`p_hw > 1 − 1/D_l`. **H4.5:** across CARC generations (Wheeler → Easley) facility power vs
+transistors has exponent ≈ 1, not 0.5; **H4.6:** the network's share of IT power rises with
+`N` on non-blocking fabrics and is flat on tapered ones. Node-level `E_node` vs work
+(H4.4) and the network share are both measurable with `power_sampler.py` plus PDU data.
+
 ## What must come from elsewhere
 
 - Hyperscaler PUE/WUE disclosures (Google, Meta, Microsoft annual reports), Uptime

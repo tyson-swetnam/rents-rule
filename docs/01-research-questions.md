@@ -43,6 +43,12 @@ means no locality is exploited at that level.
 
 **Effective dimension** — `d_eff = 1 / (1 − p)`, from the Ozaktas bound `p ≤ 1 − 1/d`.
 
+**Model dimensions (Moses et al. 2016)** — `D_l` (layout dimension: lengths grow as
+`λ^{i/D_l}` per level), `D_r` (thickness/bandwidth: `λ^{i/D_r}`; 2 = area preserving), `D_w`
+(communication: links per module grow as `λ^{i/D_w}`; Rent's `p = 1/D_w`). The
+network-energy sum converges iff `D_w ≥ D_l/(D_l − 1)`, i.e. `p ≤ 1 − 1/D_l`. See
+[background/energy-time-minimization.md](background/energy-time-minimization.md).
+
 **Hurst exponent `H`** — long-range dependence of a traffic rate series `X(t)`;
 `Var(X^{(m)}) ∝ m^{2H−2}` for block means over `m` samples; `H = 0.5` is memoryless.
 **Spectral slope `β`** — `S(f) ∝ f^{−β}`, `β = 2H − 1` for fractional Gaussian noise.
@@ -77,6 +83,9 @@ means no locality is exploited at that level.
 1. For each cost term, what is the exponent `γ` and its regime (increasing / linear / diminishing)?
 2. Under Rent's rule, does communication infrastructure scale linearly (`p_hw < 1`) or as `N log N` (`p_hw = 1`) at CARC and at hyperscale?
 3. Does a size optimum exist, and where?
+4. Which regime are data centers in: the chip regime of Moses et al. (2016), where nodes shrink and
+   power scales as `N^{1/2}`, or the fixed-node regime where linear is the ceiling and only locality
+   (`p ≤ 1 − 1/D_l`) prevents sub-linear returns? (H-ET1, H-ET2 in the primer.)
 
 ### Q6 — Dimensionality (Topic 06)
 1. What is the profile of `d_eff` across levels?

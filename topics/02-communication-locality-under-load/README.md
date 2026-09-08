@@ -86,6 +86,21 @@ Rack- and pod-level counters need switch access (`telemetry/collectors/switch_co
   compare with our counters; Jetstream2 g5.2xl / g5.4xl flavors reproduce it under our control.
 - Easley GPU partitions (`h100`, `l40s`) are group-gated through ColdFront; 2-day walltime.
 
+## What Moses et al. (2016) adds
+
+- **Steady state is the roofline ridge.** The model assumes delivery matches processing
+  (`T_net = T_node`, the network always full). For inference that is the balance between
+  bytes/token ÷ link bandwidth and compute time per token at the binding level. **H2.6:**
+  measure both and report `T_net/T_node` per level; the level with the ratio nearest 1 is the
+  bottleneck, as the paper found the wire (not the transistor) limits chip throughput.
+- **Rent's communication probability.** Bezerra et al. (2010) derive from Rent's rule the
+  probability that a message travels a given hierarchical distance; in our units the
+  fraction of a node's traffic crossing the level-`ℓ` boundary is `k^{−ℓ(1−p_w)}`. Fitting
+  that curve to the per-level bytes/token gives `p_w` in one step (`rent.p_from_locality_step`).
+- **Locality is the computer's advantage.** The paper singles out communication locality as
+  the lever multicellular organisms lack; TP-inside/PP-across serving is that lever applied
+  deliberately, and `λ_w ≪ λ_hw` (H2.2) is the measurement of how hard it is pulled.
+
 ## What must come from elsewhere
 
 Production inference telemetry from hyperscalers (rack-level and pod-level bytes per token
